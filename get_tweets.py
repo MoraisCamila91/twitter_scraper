@@ -57,7 +57,7 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
     trials = 3
     result_code = -1
     
-    while result_code != 200 or trials > 0:
+    while result_code != 200 and trials > 0:
         result = get_tweet_by_user(user_id, start_date, end_date, max_results, token)
         tweets, pagination_token, trials, result_code, token = extract_info(result, trials, token)
     

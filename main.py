@@ -36,6 +36,8 @@ max_results = 100
 # print(token)
 
 def main():
+    count_users = 0
+
     for user_id in ids:
         result_code, user_id, tweets, pagination_token = get_max_tweets_by_user(user_id, 
                                                                                 start_date, end_date, 
@@ -45,7 +47,10 @@ def main():
             save_user_tweets(user_id, tweets)
         else:
             save_user_errors(user_id, tweets, pagination_token)
-            
-        break
+        
+        count += 1
+
+        if count > 100:
+            break
 
 main()
