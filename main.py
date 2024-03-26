@@ -48,9 +48,9 @@ def main():
         else:
             save_user_errors(user_id, tweets, pagination_token)
         
-        count += 1
+        count_users += 1
 
-        if count > 100:
+        if count_users > 100:
             break
 
 main()

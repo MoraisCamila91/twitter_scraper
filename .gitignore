@@ -1,4 +1,7 @@
 keys.py
 
+user_tweets.csv
+user_tweets_fail.csv
+
 /myenv
 /__pycache__

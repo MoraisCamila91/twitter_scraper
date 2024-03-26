@@ -1,4 +1,4 @@
 redirect_uri = "https://twitter.com"
 
-SUCCESS_PATH = 'test_saves.csv'
-ERROR_PATH = 'test_saves_fail.csv'
+SUCCESS_PATH = 'user_tweets.csv'
+ERROR_PATH = 'user_tweets_fail.csv'
