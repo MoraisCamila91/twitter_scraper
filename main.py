@@ -1,6 +1,7 @@
 import pandas as pd
 
 from keys import token, bad_keys
+from configuration import SUCCESS_PATH, ERROR_PATH
 
 from handle_oauth import handle_oauth
 from get_tweets import get_max_tweets_by_user
@@ -22,8 +23,18 @@ from handle_csv import save_user_tweets, save_user_errors
 # user_ids for testing purpose
 # my_user_id = '1750230667101671424'
 # elon_id = '44196397'
-df = pd.read_csv('../AWS/users_ideology.csv').drop(columns=['Unnamed: 0'])
+df = pd.read_csv('../AWS/users_ideology.csv')[['id']]
 ids = [str(id) for id in df['id'].to_list()]
+
+df_done = pd.read_csv(SUCCESS_PATH)[['user_id']]
+ids_done = set(str(id) for id in df_done['user_id'].to_list())
+
+df_fail = pd.read_csv(ERROR_PATH)[['user_id']]
+ids_fail = set(str(id) for id in df_fail['user_id'].to_list())
+
+ids = [id for id in ids 
+       if id not in ids_done and id not in ids_fail]
+
 
 ### tweets configurations
 # 01/10/2020 -> 01/11/2020 - data mining moment (TCC)
@@ -35,22 +46,25 @@ max_results = 100
 # token = handle_oauth()
 # print(token)
 
+
 def main():
-    count_users = 0
+    token2 = token
+    # count_users = 0
 
     for user_id in ids:
-        result_code, user_id, tweets, pagination_token = get_max_tweets_by_user(user_id, 
-                                                                                start_date, end_date, 
-                                                                                max_results,
-                                                                                token)    
+        result_code, user_id, tweets, pagination_token, token2 = get_max_tweets_by_user(user_id, 
+                                                                                       start_date, end_date, 
+                                                                                       max_results,
+                                                                                       token=token2)
+        
         if result_code == 'success':
             save_user_tweets(user_id, tweets)
         else:
             save_user_errors(user_id, tweets, pagination_token)
         
-        count_users += 1
+        # count_users += 1
 
-        if count_users > 100:
-            break
+        # if count_users > 100:
+        #     break
 
 main()

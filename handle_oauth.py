@@ -75,6 +75,7 @@ def update_token(token):
         status_code = response.status_code
 
         if status_code == 200:
+            print('updated token!')
             token_data = response.json()
             return token_data
 

@@ -30,7 +30,8 @@ def extract_info(result, trials, token):
         trials = 3
         result_info = json.loads(result.text)
 
-        if result_info['meta']['result_count'] == 0:
+        if ('meta' in result_info.keys() and result_info['meta']['result_count'] == 0) or \
+           ('errors' in result_info.keys() and result_info['errors'][0]['title'] == 'Not Found Error'):
             return [], None, trials, result_code, token
 
         else:
@@ -39,11 +40,11 @@ def extract_info(result, trials, token):
             return tweets, pagination_token, trials, result_code, token
 
     elif result_code == 401:
-        token = update_token()
+        token = update_token(token)
         return [], None, trials - 1, result_code, token
 
     elif result_code == 429:
-        time.sleep(15*60)
+        time.sleep(1*60)
         return [], None, trials - 1, result_code, token
 
     else:
@@ -75,7 +76,8 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
                 tweets = tweets + new_tweets
                 
     if result_code == 200:
-        return 'success', user_id, tweets, None
+        return 'success', user_id, tweets, None, token
     
     else:
-        return 'error', user_id, tweets, pagination_token
+        return 'error', user_id, tweets, pagination_token, token
+    
