@@ -58,7 +58,7 @@ def main():
                                                                                        token=token2)
         
         if result_code == 'success':
-            save_user_tweets(user_id, tweets)
+            save_user_tweets(user_id, tweets, pagination_token)
         else:
             save_user_errors(user_id, tweets, pagination_token)
         

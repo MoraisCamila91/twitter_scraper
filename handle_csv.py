@@ -2,7 +2,7 @@ import os
 import csv
 from configuration import SUCCESS_PATH, ERROR_PATH
 
-def save_user_tweets(user_id, tweets):
+def save_user_tweets(user_id, tweets, pagination_token=None):
     keys = ['user_id', 'text', 'created_at', 'id', 'author_id']
 
     with open(SUCCESS_PATH, 'a', newline='', encoding='utf-8') as csv_file:
@@ -12,6 +12,12 @@ def save_user_tweets(user_id, tweets):
         
         if not existing_file:
             writer.writeheader()
+
+        if len(tweets) == 0:
+            tweets = [{'text': None, 
+                       'created_at': None, 
+                       'id': None, 
+                       'author_id': None}]
 
         for tweet in tweets:
             tweet['user_id'] = user_id

@@ -30,9 +30,14 @@ def extract_info(result, trials, token):
         trials = 3
         result_info = json.loads(result.text)
 
-        if ('meta' in result_info.keys() and result_info['meta']['result_count'] == 0) or \
-           ('errors' in result_info.keys() and result_info['errors'][0]['title'] == 'Not Found Error'):
+        if 'meta' in result_info.keys() and result_info['meta']['result_count'] == 0:
+            return [], 'ZERO TWEETS', trials, result_code, token        
+        
+        elif 'errors' in result_info.keys() and result_info['errors'][0]['title'] == 'Not Found Error':
             return [], None, trials, result_code, token
+        
+        elif 'errors' in result_info.keys() and 'User has been suspended' in result_info['errors'][0]['detail']:
+            return [], 'USER SUSPENDED', trials, result_code, token
 
         else:
             tweets = result_info['data']
@@ -63,7 +68,7 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
         tweets, pagination_token, trials, result_code, token = extract_info(result, trials, token)
     
     # pagination
-    while pagination_token is not None:
+    while pagination_token is not None and pagination_token not in ['ZERO TWEETS', 'USER SUSPENDED']:
         
         trials = 3
         result_code = -1
@@ -75,7 +80,7 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
             if len(new_tweets) > 0:
                 tweets = tweets + new_tweets
                 
-    if result_code == 200:
+    if result_code == 200 or pagination_token == 'ZERO TWEETS':
         return 'success', user_id, tweets, None, token
     
     else:
