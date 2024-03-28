@@ -35,6 +35,12 @@ def save_user_errors(user_id, tweets, pagination_token):
         
         if not existing_file:
             writer.writeheader()
+        
+        if len(tweets) == 0:
+            tweets = [{'text': None, 
+                       'created_at': None, 
+                       'id': None, 
+                       'author_id': None}]
 
         for tweet in tweets:
             tweet['user_id'] = user_id

@@ -73,15 +73,15 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
         trials = 3
         result_code = -1
         
-        while result_code != 200 or trials > 0:
+        while result_code != 200 and trials > 0:
             result = get_tweet_by_user(user_id, start_date, end_date, max_results, token, pagination_token)
             new_tweets, pagination_token, trials, result_code, token = extract_info(result, trials, token)
 
             if len(new_tweets) > 0:
                 tweets = tweets + new_tweets
                 
-    if result_code == 200 or pagination_token == 'ZERO TWEETS':
-        return 'success', user_id, tweets, None, token
+    if result_code == 200 or pagination_token in ['ZERO TWEETS', 'USER SUSPENDED']:
+        return 'success', user_id, tweets, pagination_token, token
     
     else:
         return 'error', user_id, tweets, pagination_token, token
