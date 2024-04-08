@@ -1,3 +1,4 @@
+from flask import Response
 import requests
 import json
 import time
@@ -17,11 +18,19 @@ def get_tweet_by_user(user_id, start_date, end_date, max_results, token, paginat
         "max_results": max_results,
         "start_time": start_date,
         "end_time": end_date,
-        "exclude": "retweets,replies",
+        # "exclude": "retweets,replies",
         "pagination_token": pagination_token
     }
+
+    try:
+        result = requests.get(url, headers=headers, params=params)
     
-    return requests.get(url, headers=headers, params=params)
+    except:
+        error_response = {'message': 'Too Many Requests'}
+        json_response = json.dumps(error_response)
+        result = Response(json_response, status=429, mimetype='application/json')
+    
+    return result
 
 def extract_info(result, trials, token):
     result_code = result.status_code

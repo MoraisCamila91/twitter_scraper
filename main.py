@@ -39,7 +39,7 @@ ids = [id for id in ids
 ### tweets configurations
 # 01/10/2020 -> 01/11/2020 - data mining moment (TCC)
 start_date = '2020-10-01T00:00:00.00Z'
-end_date = '2020-11-01T00:00:00.00Z'
+end_date = '2021-01-01T00:00:00.00Z'
 max_results = 100
 
 ### initial token
