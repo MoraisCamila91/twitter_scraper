@@ -6,3 +6,5 @@ user_tweets_fail.csv
 /myenv
 /__pycache__
 /.ipynb_checkpoints
+
+*.csv
