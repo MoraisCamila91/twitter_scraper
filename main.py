@@ -23,21 +23,28 @@ from handle_csv import save_user_tweets, save_user_errors
 # user_ids for testing purpose
 # my_user_id = '1750230667101671424'
 # elon_id = '44196397'
-df = pd.read_csv('../AWS/users_ideology.csv')[['id']]
+
+# df = pd.read_csv('../AWS/users_ideology.csv')[['id']]
+df = pd.read_csv('../AWS/elite_id.csv')[['id']]
 ids = [str(id) for id in df['id'].to_list()]
 
-df_done = pd.read_csv(SUCCESS_PATH)[['user_id']]
-ids_done = set(str(id) for id in df_done['user_id'].to_list())
+df_general_done = pd.read_csv('user_tweets.csv')[['user_id']]
+ids_general_done = set(str(id) for id in df_general_done['user_id'].to_list())
 
-df_fail = pd.read_csv(ERROR_PATH)[['user_id']]
-ids_fail = set(str(id) for id in df_fail['user_id'].to_list())
+df_done = pd.read_csv(SUCCESS_PATH)[['Unnamed: 0']]
+ids_done = set(str(id) for id in df_done['Unnamed: 0'].to_list())
+
+# df_fail = pd.read_csv(ERROR_PATH)[['Unnamed: 0']]
+# ids_fail = set(str(id) for id in df_fail['Unnamed: 0'].to_list())
 
 ids = [id for id in ids 
-       if id not in ids_done and id not in ids_fail]
+       if id not in ids_done and id not in ids_general_done]
+
+print('Faltam ' + str(len(ids)) + ' tweeteiros')
 
 
 ### tweets configurations
-# 01/10/2020 -> 01/11/2020 - data mining moment (TCC)
+# 01/10/2020 -> 01/01/2021 - data mining moment (TCC)
 start_date = '2020-10-01T00:00:00.00Z'
 end_date = '2021-01-01T00:00:00.00Z'
 max_results = 100

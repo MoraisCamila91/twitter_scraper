@@ -40,12 +40,15 @@ def extract_info(result, trials, token):
         result_info = json.loads(result.text)
 
         if 'meta' in result_info.keys() and result_info['meta']['result_count'] == 0:
+            print('ZERO TWEETS')
             return [], 'ZERO TWEETS', trials, result_code, token        
         
         elif 'errors' in result_info.keys() and result_info['errors'][0]['title'] == 'Not Found Error':
-            return [], None, trials, result_code, token
+            print('USER NOT FOUND')
+            return [], 'USER NOT FOUND', trials, result_code, token
         
         elif 'errors' in result_info.keys() and 'User has been suspended' in result_info['errors'][0]['detail']:
+            print('USER SUSPENDED')
             return [], 'USER SUSPENDED', trials, result_code, token
 
         else:
@@ -57,11 +60,13 @@ def extract_info(result, trials, token):
         token = update_token(token)
         return [], None, trials - 1, result_code, token
 
-    elif result_code == 429:
-        time.sleep(1*60)
+    elif result_code == 429 or result_code == 503:
+        print('erro ' + str(result_code))
+        time.sleep(5*60)
         return [], None, trials - 1, result_code, token
 
     else:
+        print('erro desconhecido ' + str(result_code))
         pass
 
 
@@ -77,7 +82,7 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
         tweets, pagination_token, trials, result_code, token = extract_info(result, trials, token)
     
     # pagination
-    while pagination_token is not None and pagination_token not in ['ZERO TWEETS', 'USER SUSPENDED']:
+    while pagination_token is not None and pagination_token not in ['ZERO TWEETS', 'USER SUSPENDED', 'USER NOT FOUND']:
         
         trials = 3
         result_code = -1
@@ -89,7 +94,9 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
             if len(new_tweets) > 0:
                 tweets = tweets + new_tweets
                 
-    if result_code == 200 or pagination_token in ['ZERO TWEETS', 'USER SUSPENDED']:
+    if result_code == 200 or pagination_token in ['ZERO TWEETS', 'USER SUSPENDED', 'USER NOT FOUND']:
+        if pagination_token not in ['ZERO TWEETS', 'USER SUSPENDED', 'USER NOT FOUND']:
+            print('SUCESS')
         return 'success', user_id, tweets, pagination_token, token
     
     else:

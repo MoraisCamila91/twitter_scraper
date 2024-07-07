@@ -50,6 +50,9 @@ def handle_oauth():
         code_verifier=code_verifier,
     )
     
+    with open('tokens.txt', 'a') as arquivo:
+        arquivo.write(str(token))
+
     return token
 
 
@@ -77,6 +80,10 @@ def update_token(token):
         if status_code == 200:
             print('updated token!')
             token_data = response.json()
+
+            with open('tokens.txt', 'a') as arquivo:
+                arquivo.write(str(token_data))
+
             return token_data
 
         else:

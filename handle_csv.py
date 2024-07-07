@@ -23,6 +23,10 @@ def save_user_tweets(user_id, tweets, pagination_token=None):
             tweet['user_id'] = user_id
             
             edited_tweet = {key: tweet.get(key, None) for key in keys}
+
+            if pagination_token in ['ZERO TWEETS', 'USER SUSPENDED']:
+                tweet['text'] = pagination_token
+
             writer.writerow(edited_tweet)
             
 def save_user_errors(user_id, tweets, pagination_token):
