@@ -36,7 +36,7 @@ def extract_info(result, trials, token):
     result_code = result.status_code
     
     if result_code == 200:
-        trials = 3
+        trials = 4
         result_info = json.loads(result.text)
 
         if 'meta' in result_info.keys() and result_info['meta']['result_count'] == 0:
@@ -62,7 +62,8 @@ def extract_info(result, trials, token):
 
     elif result_code == 429 or result_code == 503:
         print('erro ' + str(result_code))
-        time.sleep(5*60)
+        time.sleep(5*70)
+        print(trials)
         return [], None, trials - 1, result_code, token
 
     else:
@@ -74,7 +75,7 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
     print("getting tweets from user {}".format(user_id))
     
     # first page
-    trials = 3
+    trials = 4
     result_code = -1
     
     while result_code != 200 and trials > 0:
@@ -83,8 +84,7 @@ def get_max_tweets_by_user(user_id, start_date, end_date, max_results, token):
     
     # pagination
     while pagination_token is not None and pagination_token not in ['ZERO TWEETS', 'USER SUSPENDED', 'USER NOT FOUND']:
-        
-        trials = 3
+        trials = 4
         result_code = -1
         
         while result_code != 200 and trials > 0:
