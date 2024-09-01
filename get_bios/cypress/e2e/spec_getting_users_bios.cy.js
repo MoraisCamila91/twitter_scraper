@@ -1,10 +1,11 @@
 const ids = [
     // list of userid of your interest. It should be strings.
+    '44196397'
   ];
   describe("template spec", () => {
     ids.forEach((id) => {
       it(`PEGANDO ID DO ${id}`, () => {
-        cy.readFile("foo.json").then((foojson) => {
+        cy.readFile("user_bios.json").then((foojson) => {
           if (foojson[id] || foojson[id] === null) {
             cy.log("JA TENHO");
           } else {
@@ -17,17 +18,17 @@ const ids = [
                   .invoke("text")
                   .then((bioText) => {
                     cy.log(bioText); // This will log the text to the Cypress test runner
-                    cy.readFile("foo.json").then((obj) => {
+                    cy.readFile("user_bios.json").then((obj) => {
                       obj[id] = bioText;
                       // write the merged array
-                      cy.writeFile("foo.json", obj);
+                      cy.writeFile("user_bios.json", obj);
                     });
                   });
               } else {
-                cy.readFile("foo.json").then((obj) => {
+                cy.readFile("user_bios.json").then((obj) => {
                   obj[id] = null;
                   // write the merged array
-                  cy.writeFile("foo.json", obj);
+                  cy.writeFile("user_bios.json", obj);
                 });
               }
             });
